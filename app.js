@@ -1,5 +1,5 @@
 // Set date
-let countdownDate = new Date("January 1, 2024 00:00:00").getTime();
+let countdownDate = new Date("Januar 1, 2024 00:00:00").getTime();
 
 // Update the count down every 1 second
 let x = setInterval(function () {
@@ -7,7 +7,7 @@ let x = setInterval(function () {
     let now = new Date().getTime();
 
     // Find the distance between now and the countdown date
-    let distance = countdownDate- now;
+    let distance = countdownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
     let days = Math.floor(distance / (1000 * 60 * 60 * 24)); 
@@ -50,10 +50,10 @@ function isMobile() {
  Animation Frame 
 *****************/
 
-window.requestAnimationFrame = (function () {
-    return (
-        // window.webkitRequestAnimationFrame ||
+window.requestAnimFrame = (function () {
+    return ( 
         window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         function (callback) {
             window.setTimeout(callback, 1000 / 60);
@@ -158,7 +158,7 @@ canvas.hight = ch;
    /* if the distance traveled, including velocities is greater than the initial distance to target 
    then the target has been reached */
    if(this.distanceTraveled >= this.distanceToTarget) {
-    createParticles(tis.tx, this.ty);
+    createParticles(this.tx, this.ty);
     fireworks.splice(index, 1) // remove the firework, use the index passed into the update function to detemine which to remove
    } else {
     // target not reached keep travelling
@@ -183,10 +183,10 @@ Firework.prototype.draw = function () {
 
 
 /*************
- Particles Prototype
+ Particle Prototype
  **************/
 
- function Particles(x, y) {
+ function Particle(x, y) {
     this.x = x;
     this.y = y;
     // track the past coordinates of each particle to create a trail effect, increase the coordinate count to create more prominent trails
@@ -256,7 +256,7 @@ Firework.prototype.draw = function () {
   *************/
 
   function update() {
-    requestAnimationFrame(update);
+    requestAnimFrame(update);
 
 
     // create random color
@@ -280,25 +280,27 @@ Firework.prototype.draw = function () {
     }
 
     // launch fireworks automatically to random coordinates, when the mouse isn't down
-    if(timerTick >= timerLocal) {
-        // start the firework at the bottom middle of the screen, them set the random target coordinates, the rando y coordinates wil be set within the range of the top half screen
-        fireworks.push(new Firework(cw / 2, ch, random(0, cw), random(0, ch / 2)));
-        timerTick = 0
+    if(timerTick >= timerTotal) {
+        if(!mousedown) {
+          // start the firework at the bottom middle of the screen, them set the random target coordinates, the rando y coordinates wil be set within the range of the top half screen
+          fireworks.push(new Firework(cw / 2, ch, random(0, cw), random(0, ch / 2)));
+        }
     } else {
         timerTick++;
     }
-  }
-
+    
   // limit the rate at which fireworks get launched when the mouse is down
   if(limiterTick >= limiterTotal) {
     if(mousedown) {
         // start the firework at the bottom middle of the screen, then set the current mouse coordinates as the target
-        fireworks.push(new Firework(cw / 2, ch, mx, ny));
+        fireworks.push(new Firework(cw / 2, ch, mx, my));
         limiterTick = 0
     } else {
         limiterTick++;
     }
   }
+}
+
 
   function onResize() {
     cw = window.innerWidth;
@@ -311,17 +313,17 @@ Firework.prototype.draw = function () {
  Event Listeners
 ******************/ 
 
-canvas.addEventListener("mousemove", (e) => {
+canvas.addEventListener("mousemove",function (e) {
     mx = e.pageX - canvas.offsetLeft;
     my = e.pageY - canvas.offsetTop;
 });
 
-canvas.addEventListener("mousedown", (e) => {
+canvas.addEventListener("mousedown",function (e) {
     e.preventDefault();
     mousedown = true;
 });
 
-canvas.addEventListener("mouseup", (e) => {
+canvas.addEventListener("mouseup",function (e) {
     e.preventDefault();
     mousedown = false;
 });
